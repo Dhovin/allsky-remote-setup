@@ -2,7 +2,7 @@
 
 read -p "Enter remote username: " REMOTE_USER
 read -p "Enter remote system IP: " REMOTE_SYSTEM
-read -p "Enter remote FWDN: "SITE_FQDN
+read -p "Enter remote FWDN: " SITE_FQDN
 read -p "Enter email for SSL creation: " USER_EMAIL
 
 ssh-keygen -t rsa
