@@ -24,7 +24,7 @@ ln -s /var/www/allsky /home/$ME/allsky
 {	printf 'server {\n'
 	printf '  listen 80;\n'
 	printf '  listen [::]:80;\n'
-	printf '  server_name ${SITE_FQDN};\n'
+	printf "  server_name $SITE_FQDN;\n"
 	printf '  root /var/www/allsky;\n'
 	printf '\n'
 	printf '  index index.php;\n'
