@@ -4,7 +4,7 @@ USER_EMAIL=$2
 
 sudo apt update && sudo apt upgrade -y
 #install pre-requisits
-sudo apt install nginx php8.1-fpm php8.1-gd snapd unzip -y
+sudo apt install nginx php8.1-fpm php8.1-gd snapd unzip -y ffmpeg
 
 #if [$REMOTE_USER -eq "root"]; then
 
