@@ -14,11 +14,10 @@ unzip master.zip
 sudo mv allsky-website-master/ /var/www/allsky
 sudo chown -R www-data:www-data /var/www/allsky
 #add group write permissions
-sudo chmod g+w allsky/ -R
-ME=(whoami)
-sudo gpasswd -a $ME www-data
-sudo gpasswd -a www-data $ME
-ln -s /var/www/allsky /home/$ME/allsky
+sudo chmod g+w /var/www/allsky -R
+sudo gpasswd -a $(whoami) www-data
+sudo gpasswd -a www-data $(whoami)
+ln -s /var/www/allsky /home/$(whoami)/allsky
 
 #create nginx site 
 {	printf 'server {\n'
@@ -48,9 +47,10 @@ ln -s /var/www/allsky /home/$ME/allsky
     printf '    deny all;\n'
 	printf '  }\n'
 	printf '}\n'
-} > /etc/nginx/sites-available/allsky
-ln -s /etc/nginx/sites-available/allsky /etc/nginx/sites-enabled/allsky
-rm /etc/nginx/sites-enabled/default
+} > ~/allsky.config
+sudo mv ~/allsky.config /etc/nginx/sites-available/allsky
+sudo ln -s /etc/nginx/sites-available/allsky /etc/nginx/sites-enabled/allsky
+sudo rm /etc/nginx/sites-enabled/default
 
 #Let's Encrypt install
 sudo snap install --classic certbot

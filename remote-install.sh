@@ -8,7 +8,7 @@ read -p "Enter email for SSL creation: " USER_EMAIL
 ssh-keygen -t rsa
 ssh-copy-id $REMOTE_USER@$REMOTE_SYSTEM
 
-ssh -s -i ~/.ssh/id_rsa $REMOTE_USER@$REMOTE_SYSTEM "wget https://raw.githubusercontent.com/Dhovin/allsky-remote-setup/main/remote-setup.sh && sudo chmod +x remote-setup.sh && ./remote-setup.sh $SITE_FQDN $USER_EMAIL"
+ssh -t -i ~/.ssh/id_rsa $REMOTE_USER@$REMOTE_SYSTEM "wget https://raw.githubusercontent.com/Dhovin/allsky-remote-setup/main/remote-setup.sh && sudo chmod +x remote-setup.sh && ./remote-setup.sh $SITE_FQDN $USER_EMAIL"
 
 #update ftp-settings.sh
 sed -i 's/^PROTOCOL=""/PROTOCOL="scp"/g' ~/allsky/config/ftp-settings.sh
