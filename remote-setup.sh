@@ -1,20 +1,31 @@
 #!/bin/bash
+SITE_FQDN=$1
+USER_EMAIL=$2
+
 sudo apt update && sudo apt upgrade -y
 #install pre-requisits
 sudo apt install nginx php8.1-fpm php8.1-gd snapd unzip -y
+
+#if [$REMOTE_USER -eq "root"]; then
+
 #download AllSky Website
 wget https://github.com/thomasjacquin/allsky-website/archive/refs/heads/master.zip
-mkdir allsky
 unzip master.zip
-sudo mv allsky-website-master/ allsky/
-#sudo chown -R www-data:www-data /var/www/allsky
+sudo mv allsky-website-master/ /var/www/allsky
+sudo chown -R www-data:www-data /var/www/allsky
+#add group write permissions
+sudo chmod g+w allsky/ -R
+ME=(whoami)
+sudo gpasswd -a $ME www-data
+sudo gpasswd -a www-data $ME
+ln -s /var/www/allsky /home/$ME/allsky
+
 #create nginx site 
 {	printf 'server {\n'
 	printf '  listen 80;\n'
 	printf '  listen [::]:80;\n'
-	printf '  server_name allsky.dhovin.me;\n'
-	printf '  set $base /var/www/allsky.dhovin.me;\n'
-	printf '  root $base/home/dhovin/allsky;\n'
+	printf '  server_name ${SITE_FQDN};\n'
+	printf '  root /var/www/allsky;\n'
 	printf '\n'
 	printf '  index index.php;\n'
 	printf '\n'
@@ -40,13 +51,16 @@ sudo mv allsky-website-master/ allsky/
 } > /etc/nginx/sites-available/allsky
 ln -s /etc/nginx/sites-available/allsky /etc/nginx/sites-enabled/allsky
 rm /etc/nginx/sites-enabled/default
+
 #Let's Encrypt install
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
-sudo certbot --nginx -d allsky.dhovin.me -m dhovin@gmail.com --agree-tos -n
+sudo certbot --nginx -d $SITE_FQDN -m $USER_EMAIL --agree-tos -n
+#to allow certbot to finish
+sleep 10
+
 #NTP Server update
-#sudo nano /etc/systemd/timesyncd.conf
 sudo sed -i 's/#NTP=/NTP=0.us.pool.ntp.org/g' /etc/systemd/timesyncd.conf
+
 #reboot
 sudo shutdown -r now
-
