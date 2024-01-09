@@ -12,12 +12,15 @@ sudo apt install nginx php8.1-fpm php8.1-gd snapd unzip -y ffmpeg
 wget https://github.com/thomasjacquin/allsky-website/archive/refs/heads/master.zip
 unzip master.zip
 sudo mv allsky-website-master/ /var/www/allsky
-sudo chown -R www-data:www-data /var/www/allsky
+#sudo chown -R www-data:www-data /var/www/allsky
 #add group write permissions
-sudo chmod g+w /var/www/allsky -R
-sudo gpasswd -a $(whoami) www-data
-sudo gpasswd -a www-data $(whoami)
+#sudo chmod g+w /var/www/allsky -R
+#sudo gpasswd -a $(whoami) www-data
+#sudo gpasswd -a www-data $(whoami)
 ln -s /var/www/allsky /home/$(whoami)/allsky
+sudo sed -i "s/^user www-data;/user $(whoami);/g" /etc/nginx/nginx.conf
+sudo sed -i 's/^user = www-data/user = $(whoami)/g' /etc/php/8.1/fpm/pool.d/www.conf
+sudo sed -i 's/^group = www-data/group = $(whoami)/g' /etc/php/8.1/fpm/pool.d/www.conf
 
 #create nginx site 
 {	printf 'server {\n'
